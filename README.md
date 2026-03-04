@@ -1,34 +1,46 @@
 # RPi Energy Monitor
 
-Este projeto é uma aplicação em linguagem C desenvolvida para Raspberry Pi (especificamente projetada para RPi 4). O sistema atua como um gateway de aquisição de dados de energia, lendo grandezas elétricas de um medidor via protocolo Modbus e publicando essas informações periodicamente em um broker MQTT no formato JSON.
+This project is a **C application developed for the Raspberry Pi** (specifically designed for the **RPi 4**). The system acts as an **energy data acquisition gateway**, reading electrical measurements from an energy meter via the **Modbus protocol** and periodically publishing this information to an **MQTT broker** in **JSON format**.
 
-O sistema foi desenhado para aplicações de automação e monitoramento industrial/residencial, permitindo a análise de consumo, fator de potência e qualidade de energia.
+The system is intended for **industrial and residential automation and monitoring applications**, enabling analysis of **energy consumption, power factor, and power quality**.
 
-## Funcionalidades
+---
 
-A aplicação realiza a leitura sequencial (com intervalos de 100ms para estabilidade do barramento) das seguintes grandezas:
-* Tensão (V)
-* Corrente (A)
-* Frequência (Hz)
-* Potência Ativa (W)
-* Potência Reativa (VAr)
-* Potência Aparente (VA)
-* Fator de Potência
+## Features
 
-## Arquitetura de Software
+The application sequentially reads the following electrical quantities, using **100 ms intervals between requests** to ensure bus stability:
 
-O código principal (`main.c`) depende de dois módulos customizados para abstrair a comunicação de hardware e rede:
-* `meter.h`: Responsável pela inicialização e comunicação Modbus com o medidor de energia físico.
-* `mqtt.h`: Responsável por gerenciar a conexão com o broker MQTT e a publicação das mensagens.
+* Voltage (V)
+* Current (A)
+* Frequency (Hz)
+* Active Power (W)
+* Reactive Power (VAr)
+* Apparent Power (VA)
+* Power Factor
 
-## Formato de Dados (Payload MQTT)
+---
 
-Após realizar as leituras, os dados são exibidos no console local e formatados em uma string JSON. A publicação ocorre a cada 5 segundos no tópico `energy/7m`.
+## Software Architecture
 
-**Tópico MQTT:** `energy/7m`  
-**Client ID:** `rpi4-energy`  
+The main source file (`main.c`) relies on two custom modules that abstract hardware and network communication:
 
-**Exemplo de Payload JSON:**
+* `meter.h`  
+  Responsible for **initializing and handling Modbus communication** with the physical energy meter.
+
+* `mqtt.h`  
+  Responsible for **managing the MQTT broker connection** and publishing messages.
+
+---
+
+## Data Format (MQTT Payload)
+
+After performing the readings, the data is displayed in the **local console** and formatted into a **JSON string**. The message is published every **5 seconds** to the topic `energy/7m`.
+
+**MQTT Topic:** `energy/7m`  
+**Client ID:** `rpi4-energy`
+
+**Example JSON Payload:**
+
 ```json
 {
   "voltage": 220,
@@ -39,3 +51,4 @@ Após realizar as leituras, os dados são exibidos no console local e formatados
   "apparent_power": 1110,
   "power_factor": 0.95
 }
+```
